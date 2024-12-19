@@ -48,16 +48,18 @@ int main(int argc, char *argv[])
     // const volVectorField cell_centers_boundaries = mesh.C();
     label patchID = mesh.boundaryMesh().findIndex("pipe");
     const polyPatch& cPatch = mesh.boundaryMesh()[patchID]; 
-    Info << cPatch << endl;
     const vectorField cell_centers_boundaries = cPatch.faceCellCentres();
+    auto cell_id_boundary = cPatch.faceCells();
     while(runTime.loop())
     {   
         forAll(cPatch, boundaryI)
         {   
-            Info << boundaryI << endl;
+            // Info << cell_id_boundary[boundaryI] << endl;
+            z[cell_id_boundary[boundaryI]] = Foam::sin(2*Foam::constant::mathematical::pi*(cell_centers_boundaries[boundaryI].x() + cell_centers_boundaries[boundaryI].y()) + runTime.value());
+            Info << z[cell_id_boundary[boundaryI]] << endl;
             // Info << "X: " << cell_centers_boundaries[boundaryI].x()<< endl;
             // z.boundaryField()[boundaryI] = Foam::sin(2*Foam::constant::mathematical::pi*(cell_centers_boundaries[boundaryI].x() + cell_centers_boundaries[boundaryI].y()));
-            Info <<z.boundaryField()[boundaryI] << endl;
+            // Info <<z.boundaryField()[boundaryI] << endl;
         }
         
         // z.boundaryField()[patchID] = sin(2*Foam::constant::mathematical::pi*(cell_centers.boundaryField()[patchID].x() + cell_centers.boundaryField()[patchID].y() + runTime.time()));

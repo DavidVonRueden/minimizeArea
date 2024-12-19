@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     potentialFoam;
+application     minimizeArea;
 
 startFrom       startTime;
 
@@ -22,7 +22,7 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         1;
+endTime         4;
 
 deltaT          1;
 
