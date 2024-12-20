@@ -30,7 +30,7 @@ Description
 
 #include "argList.H"
 #include "volFields.H"
-
+#include "fvc.H"
 using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -50,32 +50,23 @@ int main(int argc, char *argv[])
     const polyPatch& cPatch = mesh.boundaryMesh()[patchID]; 
     const vectorField cell_centers_boundaries = cPatch.faceCellCentres();
     auto cell_id_boundary = cPatch.faceCells();
+
     while(runTime.loop())
     {   
+        Info << "Time = " << runTime.value() << endl;
         forAll(cPatch, boundaryI)
         {   
-            // Info << cell_id_boundary[boundaryI] << endl;
+
             z[cell_id_boundary[boundaryI]] = Foam::sin(2*Foam::constant::mathematical::pi*(cell_centers_boundaries[boundaryI].x() + cell_centers_boundaries[boundaryI].y()) + runTime.value());
-            Info << z[cell_id_boundary[boundaryI]] << endl;
-            // Info << "X: " << cell_centers_boundaries[boundaryI].x()<< endl;
-            // z.boundaryField()[boundaryI] = Foam::sin(2*Foam::constant::mathematical::pi*(cell_centers_boundaries[boundaryI].x() + cell_centers_boundaries[boundaryI].y()));
-            // Info <<z.boundaryField()[boundaryI] << endl;
         }
         
-        // z.boundaryField()[patchID] = sin(2*Foam::constant::mathematical::pi*(cell_centers.boundaryField()[patchID].x() + cell_centers.boundaryField()[patchID].y() + runTime.time()));
-        // forAll(boundary_cells, boundaryI)
-        // {
-        //     z.boundaryField()[boundaryI] = sin(2*Foam::constant::mathematical::pi*(cell_centers.boundaryField()[boundaryI].x() + cell_centers.boundaryField()[boundaryI].y() + runTime.time()));
-        // }
-        // // forAll(cell_centers, cellI)
-        // // {
-        // //     z[cellI] = Foam::sqrt(sqr(cell_centers[cellI].x()) + sqr(cell_centers[cellI].y()));
-        // // }
+        grad_z = -Foam::fvc::grad(1/(Foam::sqrt(1+Foam::magSqr(fvc::grad(z)))));
 
+        Info << "Writing fields" << endl;
         runTime.write();
-        // Info<< nl << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-        //     << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-        //     << nl << endl;
+        Info<< nl << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
+            << "  ClockTime = " << runTime.elapsedClockTime() << " s"
+            << nl << endl;
 
     }
 

@@ -8,14 +8,14 @@
 FoamFile
 {
     format      ascii;
-    class       volScalarField;
-    object      z;
+    class       volVectorField;
+    object      grad_z;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 0 0 0 0 0];
+dimensions      [0 -2 0 0 0 0 0];
 
-internalField   uniform 0;
+internalField   uniform (0 0 0);
 
 boundaryField
 {
@@ -26,8 +26,7 @@ boundaryField
 
     outlet
     {
-        type            fixedValue;
-        value           uniform 0;
+        type            zeroGradient;
     }
 
     pipe
