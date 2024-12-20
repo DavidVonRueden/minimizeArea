@@ -1,3 +1,0 @@
-SOURCE += minimizeArea.C
-
-EXE = $(FOAM_USER_APPBIN)/minimizeArea
