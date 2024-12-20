@@ -50,7 +50,13 @@ int main(int argc, char *argv[])
     const polyPatch& cPatch = mesh.boundaryMesh()[patchID]; 
     const vectorField cell_centers_boundaries = cPatch.faceCellCentres();
     auto cell_id_boundary = cPatch.faceCells();
+    
 
+    dimensionedScalar one    (
+    "one",
+    dimensionSet(0,-2,0,0,0,0,0),
+    scalar(1)
+    ); 
     while(runTime.loop())
     {   
         Info << "Time = " << runTime.value() << endl;
@@ -60,7 +66,7 @@ int main(int argc, char *argv[])
             z[cell_id_boundary[boundaryI]] = Foam::sin(2*Foam::constant::mathematical::pi*(cell_centers_boundaries[boundaryI].x() + cell_centers_boundaries[boundaryI].y()) + runTime.value());
         }
         
-        grad_z = -Foam::fvc::grad(1/(Foam::sqrt(1+Foam::magSqr(fvc::grad(z)))));
+        grad_z = -Foam::fvc::grad(1/(Foam::sqrt(one + Foam::magSqr(fvc::grad(z)))));
 
         Info << "Writing fields" << endl;
         runTime.write();
